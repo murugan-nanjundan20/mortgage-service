@@ -1,6 +1,7 @@
 package com.example.mortgage.service;
 
 import com.example.mortgage.model.InterestRate;
+import com.example.mortgage.repository.InterestRateRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -13,15 +14,14 @@ import java.util.List;
 @Service
 public class InterestRateService {
 
-    public List<InterestRate> getAllRates() {
-        var now = Instant.now().truncatedTo(ChronoUnit.MILLIS).toString();
+    private final InterestRateRepository repository;
 
-        // The % is only used for display; the actual value is stored as a decimal in DB
-
-        return List.of(
-                new InterestRate(10, "10 %", now),
-                new InterestRate(15, "8 %", now),
-                new InterestRate(20, "7 % ", now)
-        );
+    public InterestRateService(InterestRateRepository repository) {
+        this.repository = repository;
     }
+    public List<InterestRate> interestRates() {
+        return repository.findAll();
+    }
+
+
 }

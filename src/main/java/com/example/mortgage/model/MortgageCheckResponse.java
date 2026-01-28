@@ -1,5 +1,7 @@
 package com.example.mortgage.model;
 
+import java.math.BigDecimal;
+
 /**
  * Response for mortgage feasibility check.
  */

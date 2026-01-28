@@ -27,7 +27,7 @@ public class MortgageRatesController {
 
     @GetMapping("/interest-rates")
     public List<InterestRate> getRates() {
-        return interestRateService.getAllRates();
+        return interestRateService.interestRates();
     }
 
     @PostMapping("/mortgage-check")

@@ -1,10 +1,13 @@
 package com.example.mortgage.service;
 
+import com.example.mortgage.model.InterestRate;
 import com.example.mortgage.model.MortgageCheckRequest;
 import com.example.mortgage.model.MortgageCheckResponse;
+import com.example.mortgage.repository.InterestRateRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Handles mortgage feasibility and monthly cost calculations.
@@ -12,41 +15,37 @@ import java.math.BigDecimal;
 @Service
 public class MortgageService {
 
-    private static final double MAX_MULTIPLE_OF_INCOME = 4.0;
 
-    private static final double DEFAULT_ANNUAL_INTEREST_RATE = 0.03; // 3%
+    private final InterestRateRepository rateRepository;
+
+    public MortgageService(InterestRateRepository rateRepository) {
+        this.rateRepository = rateRepository;
+    }
 
     public MortgageCheckResponse checkMortgage(MortgageCheckRequest request) {
 
         boolean feasible =
-                request.loanValue()
-                        .compareTo(
-                                request.income()
-                                        .multiply(BigDecimal.valueOf(MAX_MULTIPLE_OF_INCOME))
-                        ) <= 0
-                        && request.loanValue()
-                        .compareTo(request.homeValue()) <= 0;
+                request.loanValue().compareTo(
+                        request.income().multiply(BigDecimal.valueOf(4))
+                ) <= 0
+                        && request.loanValue().compareTo(request.homeValue()) <= 0;
 
-        double monthlyCosts = getMonthlyCosts(request, feasible);
-
-        return new MortgageCheckResponse(feasible, monthlyCosts);
-    }
-
-    private static double getMonthlyCosts(MortgageCheckRequest request, boolean feasible) {
-        double monthlyCosts = 0.0;
+        BigDecimal monthlyCosts = BigDecimal.ZERO;
 
         if (feasible) {
-            // Monthly payment check using formula
-            double P = request.loanValue().doubleValue();
-            double r = DEFAULT_ANNUAL_INTEREST_RATE / 12; // monthly rate
-            int n = request.maturityPeriod() * 12; // total months
+            InterestRate rate = rateRepository
+                    .findByMaturityPeriod(request.maturityPeriod())
+                    .orElseThrow();
 
-            double numerator = r * Math.pow(1 + r, n);
-            double denominator = Math.pow(1 + r, n) - 1;
+            BigDecimal yearlyRate = rate.getInterestRate()
+                    .divide(BigDecimal.valueOf(100));
 
-            monthlyCosts = P * numerator / denominator;
-            monthlyCosts = Math.round(monthlyCosts * 100.0) / 100.0; // round to 2 decimals
+            monthlyCosts = request.loanValue()
+                    .multiply(yearlyRate)
+                    .divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
         }
-        return monthlyCosts;
+
+        return new MortgageCheckResponse(feasible, monthlyCosts.doubleValue());
     }
 }
+

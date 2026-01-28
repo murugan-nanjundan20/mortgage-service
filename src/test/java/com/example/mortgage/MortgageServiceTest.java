@@ -20,28 +20,32 @@ class MortgageServiceTest {
 
     @Test
     void mortgageIsFeasible() {
+
+        // income * 4 = 240000 >= loanValue (150000)
         MortgageCheckRequest req = new MortgageCheckRequest(
-                new BigDecimal("5000"),
+                new BigDecimal("60000"),   // yearly income
                 20,
                 new BigDecimal("150000"),
                 new BigDecimal("200000")
-
         );
-
         MortgageCheckResponse response = service.checkMortgage(req);
         assertTrue(response.feasible());
     }
 
+
     @Test
-    void mortgageNotFeasible_whenLoanExceedsHomeValue() {
+    void mortgageNotFeasible_whenLoanExceedsFourTimesIncome() {
+
+        // income * 4 = 80_000 < loanValue (150_000)
         MortgageCheckRequest req = new MortgageCheckRequest(
-                new BigDecimal("5000"),
+                new BigDecimal("20000"),   // yearly income
                 20,
-                new BigDecimal("250000"),
+                new BigDecimal("150000"),
                 new BigDecimal("200000")
         );
 
         MortgageCheckResponse response = service.checkMortgage(req);
         assertFalse(response.feasible());
     }
+
 }

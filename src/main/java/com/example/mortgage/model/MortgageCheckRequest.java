@@ -2,8 +2,20 @@ package com.example.mortgage.model;
 
 import java.math.BigDecimal;
 
-/**
- * Request payload for mortgage feasibility check.
- */
-public record MortgageCheckRequest(BigDecimal income, int maturityPeriod, BigDecimal loanValue, BigDecimal homeValue
-) {}
+import jakarta.validation.constraints.*;
+
+public record MortgageCheckRequest(
+
+        @NotNull @Positive
+        BigDecimal income,
+
+        @NotNull @Positive
+        Integer maturityPeriod,
+
+        @NotNull @Positive
+        BigDecimal loanValue,
+
+        @NotNull @Positive
+        BigDecimal homeValue
+) {
+}
