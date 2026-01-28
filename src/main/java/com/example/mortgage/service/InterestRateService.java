@@ -3,7 +3,6 @@ package com.example.mortgage.service;
 import com.example.mortgage.model.InterestRate;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -16,6 +15,8 @@ public class InterestRateService {
 
     public List<InterestRate> getAllRates() {
         var now = Instant.now().truncatedTo(ChronoUnit.MILLIS).toString();
+
+        // The % is only used for display; the actual value is stored as a decimal in DB
 
         return List.of(
                 new InterestRate(10, "10 %", now),
