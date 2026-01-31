@@ -35,9 +35,23 @@ Password: (leave empty)
 
 ## Tech Stack
 - Java 21
-- Spring Boot 4.2
+- Spring Boot 3.2+
 - Spring Web (REST)
 - Spring Data JPA
+- Zipkin
+- OpenTelemetry and Observation (Metrics & Logs) + Tracing
 - H2 in-memory database
 - Jakarta Validation (for DTO validation)
 - JUnit 5 (unit tests)
+- 
+## Zipkin can be started locally using Docker
+
+  docker run -d -p 9411:9411 openzipkin/zipkin
+  
+  - URL - http://localhost:9411
+    
+## Actuator 
+  - http://localhost:8080/actuator/health
+  - http://localhost:8080/actuator/metrics
+
+  
