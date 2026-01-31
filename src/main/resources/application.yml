@@ -1,0 +1,23 @@
+
+## Metrics and Tracing
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+logging:
+  pattern:
+    level: "%5p [%X{traceId:-},%X{spanId:-},%clr(${spring.application.name}){cyan}]"
+
+
+## configure interest maturity period and respective interest rate
+
+interest-rates:
+  rates:
+    - maturityPeriod: 10
+      interestRate: 10.0
+    - maturityPeriod: 20
+      interestRate: 8.0
+    - maturityPeriod: 30
+      interestRate: 7.0

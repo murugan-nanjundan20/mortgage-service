@@ -1,8 +1,7 @@
-package com.example.mortgage;
+package com.example.mortgage.service;
 
 import com.example.mortgage.model.MortgageCheckRequest;
 import com.example.mortgage.model.MortgageCheckResponse;
-import com.example.mortgage.service.MortgageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
