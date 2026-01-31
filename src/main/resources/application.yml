@@ -1,7 +1,17 @@
+spring:
+  application:
+    name: mortgage-service
 
 ## Metrics and Tracing
 
 management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  metrics:
+    enable:
+      all: true
   tracing:
     sampling:
       probability: 1.0
