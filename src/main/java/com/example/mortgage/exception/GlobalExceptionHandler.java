@@ -1,12 +1,16 @@
 package com.example.mortgage.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -21,7 +25,7 @@ public class GlobalExceptionHandler {
     /**
      * Handles domain error when interest rate is missing.
      */
-    @SuppressWarnings("unused")
+
     @ExceptionHandler(InterestRateNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleInterestRateNotFound(
             InterestRateNotFoundException ex) {
@@ -34,9 +38,49 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handles validation errors for invalid request bodies.
+     */
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationErrors(
+            MethodArgumentNotValidException ex) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult()
+                .getFieldErrors()
+                .forEach(error ->
+                        errors.put(error.getField(), error.getDefaultMessage())
+                );
+
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+    /**
      * Handles invalid client input errors.
      */
-    @SuppressWarnings("unused")
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleJsonErrors(
+            HttpMessageNotReadableException ex) {
+
+        Throwable cause = ex.getCause();
+
+        if (cause instanceof InvalidFormatException invalidFormatException) {
+            String fieldName = invalidFormatException.getPath().getFirst().getFieldName();
+            return ResponseEntity.badRequest()
+                    .body(Map.of(fieldName, "Invalid input"));
+        }
+
+        return ResponseEntity
+                .badRequest()
+                .body(Map.of("error", "Malformed JSON"));
+    }
+
+    /**
+     * Handles invalid client input errors.
+     */
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleIllegalArgument(
             IllegalArgumentException ex) {
@@ -51,7 +95,6 @@ public class GlobalExceptionHandler {
     /**
      * Handles unexpected system state errors.
      */
-    @SuppressWarnings("unused")
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, String>> handleIllegalState(
             IllegalStateException ex) {
@@ -64,7 +107,7 @@ public class GlobalExceptionHandler {
     }
 
     // ------------------- Generic handler -------------------
-    @SuppressWarnings("unused")
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGeneric(Exception ex) {
         log.error("Unhandled exception occurred", ex);

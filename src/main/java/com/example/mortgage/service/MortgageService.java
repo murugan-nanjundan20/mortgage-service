@@ -1,8 +1,8 @@
 package com.example.mortgage.service;
 
 import com.example.mortgage.entity.InterestRateEntity;
-import com.example.mortgage.model.MortgageCheckRequest;
-import com.example.mortgage.model.MortgageCheckResponse;
+import com.example.mortgage.dto.MortgageCheckRequest;
+import com.example.mortgage.dto.MortgageCheckResponse;
 import com.example.mortgage.repository.InterestRateRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

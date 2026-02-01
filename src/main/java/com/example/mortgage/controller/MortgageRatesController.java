@@ -1,8 +1,8 @@
 package com.example.mortgage.controller;
 
 import com.example.mortgage.entity.InterestRateEntity;
-import com.example.mortgage.model.MortgageCheckRequest;
-import com.example.mortgage.model.MortgageCheckResponse;
+import com.example.mortgage.dto.MortgageCheckRequest;
+import com.example.mortgage.dto.MortgageCheckResponse;
 import com.example.mortgage.service.InterestRateService;
 import com.example.mortgage.service.MortgageService;
 import jakarta.validation.Valid;

@@ -2,7 +2,7 @@ package com.example.mortgage.controller;
 
 
 import com.example.mortgage.entity.InterestRateEntity;
-import com.example.mortgage.model.MortgageCheckRequest;
+import com.example.mortgage.dto.MortgageCheckRequest;
 import com.example.mortgage.repository.InterestRateRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
